@@ -1,20 +1,20 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { join, resolve } from 'node:path'
-import { webpackIncludeRegexp } from '@storybook/core-webpack'
-import findCacheDirectory from 'find-cache-dir'
-import slash from 'slash'
 import {
   getBuilderOptions,
   loadPreviewOrConfigFile,
   normalizeStories,
   readTemplate,
-} from 'storybook/internal/common'
+} from '@storybook/core-common'
+import { webpackIncludeRegexp } from '@storybook/core-webpack'
 import type {
   NormalizedStoriesSpecifier,
   Options,
   PreviewAnnotation,
-} from 'storybook/internal/types'
+} from '@storybook/types'
+import findCacheDirectory from 'find-cache-dir'
+import slash from 'slash'
 import { dedent } from 'ts-dedent'
 import type { BuilderOptions } from '../types'
 
@@ -83,7 +83,7 @@ export const getVirtualModules = async (options: Options) => {
   virtualModules[configEntryPath] = (
     await readTemplate(
       require.resolve(
-        'storybook-builder-rsbuild/templates/virtualModuleModernEntry.js',
+        '@balafla/storybook-builder-rsbuild/templates/virtualModuleModernEntry.js',
       ),
     )
   )

@@ -4,17 +4,17 @@ import type { RsbuildConfig, Rspack } from '@rsbuild/core'
 import { pluginTypeCheck } from '@rsbuild/plugin-type-check'
 // @ts-expect-error forced resolve from `dist/index.d.ts` by typesVersions.
 import { webpack as docsWebpack } from '@storybook/addon-docs/preset'
-// @ts-expect-error (I removed this on purpose, because it's incorrect)
-import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin'
-import { pluginHtmlMinifierTerser } from 'rsbuild-plugin-html-minifier-terser'
 import {
   getBuilderOptions,
   isPreservingSymlinks,
   normalizeStories,
   stringifyProcessEnvs,
-} from 'storybook/internal/common'
-import { globalsNameReferenceMap } from 'storybook/internal/preview/globals'
-import type { Options } from 'storybook/internal/types'
+} from '@storybook/core-common'
+import { globalsNameReferenceMap } from '@storybook/preview/globals'
+import type { Options } from '@storybook/types'
+// @ts-expect-error (I removed this on purpose, because it's incorrect)
+import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin'
+import { pluginHtmlMinifierTerser } from 'rsbuild-plugin-html-minifier-terser'
 import { dedent } from 'ts-dedent'
 import type { BuilderOptions } from '../types'
 import type { TypescriptOptions } from '../types'
@@ -291,7 +291,7 @@ export default async (
           use: [
             {
               loader: require.resolve(
-                'storybook-builder-rsbuild/loaders/export-order-loader',
+                '@balafla/storybook-builder-rsbuild/loaders/export-order-loader',
               ),
             },
           ],

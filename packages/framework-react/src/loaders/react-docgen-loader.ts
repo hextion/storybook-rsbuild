@@ -2,6 +2,7 @@
  * Code taken from https://github.com/storybookjs/storybook/tree/next/code/presets/react-webpack/src/loaders
  */
 
+import { logger } from '@storybook/node-logger'
 import findUp from 'find-up'
 import MagicString from 'magic-string'
 import {
@@ -18,7 +19,6 @@ import type {
   NodePath,
   babelTypes as t,
 } from 'react-docgen'
-import { logger } from 'storybook/internal/node-logger'
 import * as TsconfigPaths from 'tsconfig-paths'
 // @ts-expect-error can not reexport `LoaderContext` from @rsbuild/core
 import type { LoaderContext } from 'webpack'

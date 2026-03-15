@@ -1,5 +1,5 @@
 import { dirname, join } from 'node:path'
-import type { PresetProperty } from 'storybook/internal/types'
+import type { PresetProperty } from '@storybook/types'
 import { rsbuildFinalDocs } from './react-docs'
 import type { StorybookConfig } from './types'
 
@@ -19,7 +19,7 @@ export const core: PresetProperty<'core'> = async (config, options) => {
   return {
     ...config,
     builder: {
-      name: getAbsolutePath('storybook-builder-rsbuild'),
+      name: getAbsolutePath('@balafla/storybook-builder-rsbuild'),
       options:
         typeof framework === 'string' ? {} : framework.options.builder || {},
     },

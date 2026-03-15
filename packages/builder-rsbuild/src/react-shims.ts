@@ -6,13 +6,13 @@
 import { readFile } from 'node:fs/promises'
 import { dirname, isAbsolute, join } from 'node:path'
 import type { RsbuildConfig } from '@rsbuild/core'
-import type { Options } from 'storybook/internal/types'
+import type { Options } from '@storybook/types'
 
 /**
  * Get react-dom version from the resolvedReact preset, which points to either
  * a root react-dom dependency or the react-dom dependency shipped with addon-docs
  */
-const getIsReactVersion18or19 = async (options: Options) => {
+const getIsReactModern = async (options: Options) => {
   const { legacyRootApi } =
     (await options.presets.apply<{ legacyRootApi?: boolean } | null>(
       'frameworkOptions',
@@ -22,12 +22,9 @@ const getIsReactVersion18or19 = async (options: Options) => {
     return false
   }
 
-  const resolvedReact = await options.presets.apply<{ reactDom?: string }>(
-    'resolvedReact',
-    {},
+  const reactDom = dirname(
+    require.resolve('react-dom/package.json', { paths: [process.cwd()] }),
   )
-  const reactDom =
-    resolvedReact.reactDom || dirname(require.resolve('react-dom/package.json'))
 
   if (!isAbsolute(reactDom)) {
     // if react-dom is not resolved to a file we can't be sure if the version in package.json is correct or even if package.json exists
@@ -39,8 +36,8 @@ const getIsReactVersion18or19 = async (options: Options) => {
     await readFile(join(reactDom, 'package.json'), 'utf-8'),
   )
   return (
-    version.startsWith('18') ||
-    version.startsWith('19') ||
+    version.startsWith('18.') ||
+    version.startsWith('19.') ||
     version.startsWith('0.0.0')
   )
 }
@@ -49,16 +46,17 @@ export const applyReactShims = async (
   config: any,
   options: Options,
 ): Promise<RsbuildConfig | undefined> => {
-  const isReactVersion18 = await getIsReactVersion18or19(options)
-  if (isReactVersion18) {
-    return undefined
+  const isReactModern = await getIsReactModern(options)
+  if (isReactModern) {
+    return {
+      source: {
+        alias: {
+          '@storybook/react-dom-shim':
+            '@storybook/react-dom-shim/dist/react-18',
+        },
+      },
+    }
   }
 
-  return {
-    source: {
-      alias: {
-        '@storybook/react-dom-shim': '@storybook/react-dom-shim/dist/react-16',
-      },
-    },
-  }
+  return undefined
 }

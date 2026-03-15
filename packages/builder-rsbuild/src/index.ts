@@ -1,17 +1,12 @@
 import { type AddressInfo, createServer } from 'node:net'
-import { join, parse } from 'node:path'
+import { dirname, join, parse } from 'node:path'
 import * as rsbuildReal from '@rsbuild/core'
+import { getPresets, resolveAddonName } from '@storybook/core-common'
+import { WebpackInvocationError } from '@storybook/core-events/server-errors'
+import type { Options, Preset, StorybookConfig } from '@storybook/types'
 import fs from 'fs-extra'
 import prettyTime from 'pretty-hrtime'
 import sirv from 'sirv'
-import { corePath } from 'storybook/core-path'
-import { getPresets, resolveAddonName } from 'storybook/internal/common'
-import { WebpackInvocationError } from 'storybook/internal/server-errors'
-import type {
-  Options,
-  Preset,
-  StorybookConfigRaw,
-} from 'storybook/internal/types'
 import rsbuildConfig, {
   type RsbuildBuilderOptions,
 } from './preview/iframe-rsbuild.config'
@@ -54,11 +49,14 @@ function nonNullables<T>(value: T): value is NonNullable<T> {
   return value !== undefined
 }
 
+const getAbsolutePath = <I extends string>(input: I): I =>
+  dirname(require.resolve(join(input, 'package.json'))) as any
+
 const rsbuild = async (_: unknown, options: RsbuildBuilderOptions) => {
   const { presets } = options
   // #region webpack addons
   const webpackAddons =
-    await presets.apply<StorybookConfigRaw['addons']>('webpackAddons')
+    await presets.apply<StorybookConfig['addons']>('webpackAddons')
   const resolvedWebpackAddons = (webpackAddons ?? [])
     .map((preset: Preset) => {
       const addonOptions = isObject(preset)
@@ -70,7 +68,7 @@ const rsbuild = async (_: unknown, options: RsbuildBuilderOptions) => {
     })
     .filter(nonNullables)
   const { apply } = await getPresets(resolvedWebpackAddons, options)
-  const webpackAddonsConfig: rsbuildReal.Rspack.Configuration = await apply(
+  const webpackAddonsConfig = await apply<rsbuildReal.Rspack.Configuration>(
     'webpackFinal',
     // TODO: using empty webpack config as base for now. It's better to using the composed rspack
     // config in `iframe-rsbuild.config.ts` as base config. But when `tools.rspack` is an async function,
@@ -172,8 +170,8 @@ export const start: RsbuildBuilder['start'] = async ({
     })
   }
 
-  const previewResolvedDir = join(corePath, 'dist/preview')
-  const previewDirOrigin = previewResolvedDir
+  const previewResolvedDir = getAbsolutePath('@storybook/preview')
+  const previewDirOrigin = join(previewResolvedDir, 'dist')
 
   router.use(
     '/sb-preview',
@@ -203,8 +201,8 @@ export const build: ({ options }: BuilderStartOptions) => Promise<Stats> =
       rsbuildConfig: config,
     })
 
-    const previewResolvedDir = join(corePath, 'dist/preview')
-    const previewDirOrigin = previewResolvedDir
+    const previewResolvedDir = getAbsolutePath('@storybook/preview')
+    const previewDirOrigin = join(previewResolvedDir, 'dist')
     const previewDirTarget = join(options.outputDir || '', 'sb-preview')
     let stats: Stats
 
@@ -235,7 +233,7 @@ export const build: ({ options }: BuilderStartOptions) => Promise<Stats> =
 export const corePresets = [join(__dirname, './preview-preset.js')]
 
 export const previewMainTemplate = () =>
-  require.resolve('storybook-builder-rsbuild/templates/preview.ejs')
+  require.resolve('@balafla/storybook-builder-rsbuild/templates/preview.ejs')
 
 function getRandomPort(host?: string) {
   return new Promise<number>((resolve, reject) => {

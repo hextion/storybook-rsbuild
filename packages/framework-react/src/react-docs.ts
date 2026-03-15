@@ -1,5 +1,5 @@
 import { mergeRsbuildConfig } from '@rsbuild/core'
-import { hasDocsOrControls } from 'storybook/internal/docs-tools'
+import { hasDocsOrControls } from '@storybook/docs-tools'
 
 import type { RsbuildConfig } from '@rsbuild/core'
 import { requirer } from './requirer'
@@ -31,7 +31,7 @@ export const rsbuildFinalDocs: NonNullable<
                 enforce: 'pre',
                 loader: requirer(
                   require.resolve,
-                  'storybook-react-rsbuild/loaders/react-docgen-loader',
+                  '@balafla/storybook-react-rsbuild/loaders/react-docgen-loader',
                 ),
                 options: {
                   debug,
@@ -92,7 +92,7 @@ export const rsbuildFinalDocs: NonNullable<
   //             enforce: 'pre',
   //             loader: requirer(
   //               require.resolve,
-  //               'storybook-react-rsbuild/loaders/react-docgen-loader',
+  //               '@balafla/storybook-react-rsbuild/loaders/react-docgen-loader',
   //             ),
   //             options: {
   //               debug,

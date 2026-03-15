@@ -1,9 +1,9 @@
-import { type RsbuildConfig, mergeRsbuildConfig } from '@rsbuild/core'
-import { loadConfig } from '@rslib/core'
 import type {
   RsbuildFinal,
   StorybookConfigRsbuild,
-} from 'storybook-builder-rsbuild'
+} from '@balafla/storybook-builder-rsbuild'
+import { type RsbuildConfig, mergeRsbuildConfig } from '@rsbuild/core'
+import { loadConfig } from '@rslib/core'
 import type { AddonOptions } from './types'
 
 type BaseOptions = Parameters<RsbuildFinal>[1]

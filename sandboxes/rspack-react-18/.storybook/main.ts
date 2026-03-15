@@ -1,6 +1,6 @@
 import { dirname, join } from 'node:path'
 // import { mergeRsbuildConfig } from '@rsbuild/core'
-import type { StorybookConfig } from 'storybook-react-rsbuild'
+import type { StorybookConfig } from '@balafla/storybook-react-rsbuild'
 // @ts-expect-error
 import rspackConfig from '../rspack.config.cjs'
 
@@ -15,14 +15,13 @@ function getAbsolutePath(value: string): any {
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
   addons: [
-    '@storybook/addon-onboarding',
+    '@storybook/addon-docs',
     '@storybook/addon-links',
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
-    '@chromatic-com/storybook',
   ],
   framework: {
-    name: getAbsolutePath('storybook-react-rsbuild'),
+    name: getAbsolutePath('@balafla/storybook-react-rsbuild'),
     options: {},
   },
   docs: {
