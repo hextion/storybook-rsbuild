@@ -40,8 +40,8 @@
   "files": ["dist/**/*", "README.md", "*.js", "*.d.ts", "!src/**/*"],
   "scripts": {
     "build": "pnpm run prep --optimized",
-    "check": "node --loader ../../scripts/node_modules/esbuild-register/loader.js -r ../../scripts/node_modules/esbuild-register/register.js ../../scripts/prepare/check.ts",
-    "prep": "node --loader ../../scripts/node_modules/esbuild-register/loader.js -r ../../scripts/node_modules/esbuild-register/register.js ../../scripts/prepare/bundle.ts",
+    "check": "jiti ../../scripts/prepare/check.ts",
+    "prep": "jiti ../../scripts/prepare/bundle.ts",
     "prepare": "pnpm run build"
   },
   "dependencies": {
@@ -51,7 +51,7 @@
     "@storybook/node-logger": "^7.6.24",
     "@storybook/react": "^7.6.24",
     "@storybook/react-docgen-typescript-plugin": "1.0.6--canary.9.0c3f3b7.0",
-    "@types/node": "^18.0.0",
+    "@types/node": "^24.0.0",
     "find-up": "^5.0.0",
     "magic-string": "^0.30.17",
     "react-docgen": "^7.1.1",
