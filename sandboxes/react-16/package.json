@@ -26,7 +26,7 @@
     "@storybook/blocks": "^7.6.24",
     "@storybook/react": "^7.6.24",
     "@storybook/test": "^7.6.24",
-    "@types/react": "^16.14.65",
+    "@types/react": "^16.14.69",
     "@types/react-dom": "^16.9.25",
     "storybook": "^7.6.24",
     "typescript": "^5.7.3"
