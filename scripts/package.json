@@ -54,17 +54,7 @@
     "typescript": "*",
     "util": "^0.12.5"
   },
-  "devDependencies": {
-    "rimraf": "^5.0.10"
-  },
-  "optionalDependencies": {
-    "@verdaccio/types": "^10.8.0",
-    "ts-loader": "^9.5.1",
-    "verdaccio": "^5.19.1",
-    "verdaccio-auth-memory": "^10.2.2"
-  },
-  "packageManager": "yarn@4.0.2",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=24.0.0"
   }
 }

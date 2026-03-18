@@ -37,7 +37,7 @@
     "prepare": "yarn run build"
   },
   "dependencies": {
-    "@balafla/storybook-builder-rsbuild": "workspace:*",
+    "@balafla/storybook-builder-rsbuild": "^1.0.3",
     "@storybook/html": "^7.6.24"
   },
   "devDependencies": {

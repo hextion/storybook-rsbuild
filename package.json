@@ -7,14 +7,14 @@
     "build": "cross-env NX_DAEMON=false nx run-many -t build --exclude \"@sandboxes/*\"",
     "build:sandboxes": "cross-env NX_DAEMON=false nx run-many -t build:storybook --projects \"@sandboxes/*\"",
     "check": "cross-env NX_DAEMON=false nx run-many -t check",
-    "check-dependency-version": "yarn tsx CDVC.mts",
+    "check-dependency-version": "jiti CDVC.mts",
     "dev": "yarn workspaces foreach -Ap run prepare --watch",
     "lint": "biome check",
     "test": "cross-env NODE_OPTIONS=--max_old_space_size=4096 vitest run",
     "test:watch": "cross-env NODE_OPTIONS=--max_old_space_size=4096 vitest watch"
   },
   "simple-git-hooks": {
-    "pre-commit": "npx nano-staged"
+    "pre-commit": "yarn nano-staged"
   },
   "nano-staged": {
     "*.{json,css,less,scss}": "biome check --write",
@@ -27,7 +27,8 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
-    "@changesets/cli": "^2.28.1",
+    "@changesets/changelog-github": "^0.6.0",
+    "@changesets/cli": "^2.30.0",
     "@testing-library/jest-dom": "^6.6.3",
     "check-dependency-version-consistency": "^4.1.1",
     "cross-env": "^7.0.3",
@@ -37,7 +38,6 @@
     "simple-git-hooks": "^2.11.1",
     "sort-package-json": "^2.12.0",
     "ts-dedent": "^2.2.0",
-    "tsx": "^4.19.4",
     "typescript": "*",
     "vitest": "^2.1.9"
   },
