@@ -1,8 +1,8 @@
-import { CDVC } from 'check-dependency-version-consistency'
-import { fileURLToPath } from 'node:url'
 import { dirname } from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { CDVC } from 'check-dependency-version-consistency'
 
-// @ts-ignore
+// @ts-expect-error
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 

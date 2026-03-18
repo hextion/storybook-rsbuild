@@ -43,7 +43,7 @@ const getIsReactModern = async (options: Options) => {
 }
 
 export const applyReactShims = async (
-  config: any,
+  _config: any,
   options: Options,
 ): Promise<RsbuildConfig | undefined> => {
   const isReactModern = await getIsReactModern(options)

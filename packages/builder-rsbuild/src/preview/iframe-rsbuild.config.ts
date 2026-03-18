@@ -1,6 +1,6 @@
 import { dirname, join, resolve } from 'node:path'
-import { loadConfig, mergeRsbuildConfig } from '@rsbuild/core'
 import type { RsbuildConfig, Rspack } from '@rsbuild/core'
+import { loadConfig, mergeRsbuildConfig } from '@rsbuild/core'
 import { pluginTypeCheck } from '@rsbuild/plugin-type-check'
 // @ts-expect-error forced resolve from `dist/index.d.ts` by typesVersions.
 import { webpack as docsWebpack } from '@storybook/addon-docs/preset'
@@ -16,8 +16,7 @@ import type { Options } from '@storybook/types'
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin'
 import { pluginHtmlMinifierTerser } from 'rsbuild-plugin-html-minifier-terser'
 import { dedent } from 'ts-dedent'
-import type { BuilderOptions } from '../types'
-import type { TypescriptOptions } from '../types'
+import type { BuilderOptions, TypescriptOptions } from '../types'
 import { getVirtualModules } from './virtual-module-mapping'
 
 const getAbsolutePath = <I extends string>(input: I): I =>
@@ -25,7 +24,7 @@ const getAbsolutePath = <I extends string>(input: I): I =>
 const maybeGetAbsolutePath = <I extends string>(input: I): I | false => {
   try {
     return getAbsolutePath(input)
-  } catch (e) {
+  } catch (_e) {
     return false
   }
 }

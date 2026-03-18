@@ -2,7 +2,12 @@
   "name": "storybook-rsbuild-monorepo",
   "version": "0.0.0",
   "private": true,
-  "workspaces": ["packages/*", "sandboxes/*", "scripts", "website"],
+  "workspaces": [
+    "packages/*",
+    "sandboxes/*",
+    "scripts",
+    "website"
+  ],
   "scripts": {
     "build": "cross-env NX_DAEMON=false nx run-many -t build --exclude \"@sandboxes/*\"",
     "build:sandboxes": "cross-env NX_DAEMON=false nx run-many -t build:storybook --projects \"@sandboxes/*\"",
@@ -22,7 +27,10 @@
   "nano-staged": {
     "*.{json,css,less,scss}": "biome check --write",
     "*.{js,jsx,ts,tsx,mjs,cjs}": "biome check --write",
-    "**/package.json": ["sort-package-json", "biome check --write"],
+    "**/package.json": [
+      "sort-package-json",
+      "biome check --write"
+    ],
     "*.{md,yml}": "prettier --write"
   },
   "resolutions": {
@@ -30,7 +38,7 @@
     "typescript": "^5.9.3"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
+    "@biomejs/biome": "2.4.8",
     "@changesets/changelog-github": "^0.6.0",
     "@changesets/cli": "^2.30.0",
     "@testing-library/jest-dom": "^6.6.3",

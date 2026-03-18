@@ -2,7 +2,11 @@
   "name": "@balafla/storybook-builder-rsbuild",
   "version": "1.0.3",
   "description": "Rsbuild builder for Storybook",
-  "keywords": ["storybook", "rsbuild", "rspack"],
+  "keywords": [
+    "storybook",
+    "rsbuild",
+    "rspack"
+  ],
   "homepage": "https://storybook.rsbuild.dev",
   "bugs": {
     "url": "https://github.com/rspack-contrib/storybook-rsbuild/issues"

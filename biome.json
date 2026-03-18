@@ -1,29 +1,19 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
-  "organizeImports": {
-    "enabled": true,
-    "include": [
-      "./**/*.js",
-      "./**/*.jsx",
-      "./**/*.ts",
-      "./**/*.tsx",
-      "./**/*.mjs",
-      "./**/*.cjs"
-    ]
-  },
+  "$schema": "https://biomejs.dev/schemas/2.4.8/schema.json",
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
   "vcs": {
     "enabled": true,
-    "defaultBranch": "main",
+    "defaultBranch": "storybook-v7",
     "clientKind": "git",
     "useIgnoreFile": true
   },
   "files": {
-    "ignore": [".yarn/releases"],
+    "includes": ["**", "!**/.yarn/releases", "!**/*.vue"],
     "ignoreUnknown": true
   },
   "formatter": {
     "indentStyle": "space",
-    "ignore": ["*.vue"]
+    "includes": ["**", "!**/*.vue"]
   },
   "javascript": {
     "formatter": {
@@ -39,12 +29,10 @@
   },
   "linter": {
     "enabled": true,
-    "ignore": ["./scripts/"],
+    "includes": ["**", "!scripts/"],
     "rules": {
       "recommended": true,
-      "a11y": {
-        "all": false
-      },
+      "a11y": "off",
       "style": {
         "noNonNullAssertion": "off"
       },

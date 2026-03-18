@@ -61,7 +61,7 @@ export default async function loader(
         }),
       meta,
     )
-  } catch (err) {
+  } catch (_err) {
     return callback(null, source, map, meta)
   }
 }

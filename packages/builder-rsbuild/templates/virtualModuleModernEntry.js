@@ -1,14 +1,13 @@
+import { importFn } from '{{storiesFilename}}'
 import { createBrowserChannel } from '@storybook/channels'
-import {
-  ClientApi,
-  PreviewWeb,
-  addons,
-  composeConfigs,
-} from '@storybook/preview-api'
 
 import { global } from '@storybook/global'
-
-import { importFn } from '{{storiesFilename}}'
+import {
+  addons,
+  ClientApi,
+  composeConfigs,
+  PreviewWeb,
+} from '@storybook/preview-api'
 
 const getProjectAnnotations = () =>
   composeConfigs(['{{previewAnnotations_requires}}'])

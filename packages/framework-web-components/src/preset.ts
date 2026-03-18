@@ -21,7 +21,7 @@ export const core: PresetProperty<'core'> = async (config, options) => {
 
 export const rsbuildFinal: StorybookConfig['rsbuildFinal'] = (
   config,
-  options,
+  _options,
 ) => {
   delete config.html
   return config

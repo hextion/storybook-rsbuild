@@ -2,7 +2,13 @@
   "name": "@balafla/storybook-html-rsbuild",
   "version": "1.0.3",
   "description": "Storybook for HTML and Rsbuild: View HTML snippets in isolation with Hot Reloading.",
-  "keywords": ["storybook", "rsbuild", "rspack", "vanilla", "html"],
+  "keywords": [
+    "storybook",
+    "rsbuild",
+    "rspack",
+    "vanilla",
+    "html"
+  ],
   "homepage": "https://storybook.rsbuild.dev",
   "bugs": {
     "url": "https://github.com/rspack-contrib/storybook-rsbuild/issues"
@@ -29,7 +35,13 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
-  "files": ["dist/**/*", "README.md", "*.js", "*.d.ts", "!src/**/*"],
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "*.js",
+    "*.d.ts",
+    "!src/**/*"
+  ],
   "scripts": {
     "build": "yarn run prep --optimized",
     "check": "jiti ../../scripts/prepare/check.ts",
@@ -63,7 +75,10 @@
     "access": "public"
   },
   "bundler": {
-    "entries": ["./src/index.ts", "./src/preset.ts"],
+    "entries": [
+      "./src/index.ts",
+      "./src/preset.ts"
+    ],
     "platform": "node"
   }
 }

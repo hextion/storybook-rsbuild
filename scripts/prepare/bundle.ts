@@ -202,7 +202,7 @@ async function getDTSConfigs({
   return { dtsBuild, dtsConfig, tsConfigExists }
 }
 
-function getESBuildOptions(optimized: boolean) {
+function getESBuildOptions(_optimized: boolean) {
   return {
     logLevel: 'error',
     legalComments: 'none',

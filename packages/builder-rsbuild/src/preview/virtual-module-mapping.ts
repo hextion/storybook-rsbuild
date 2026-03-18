@@ -1,6 +1,5 @@
 import fs from 'node:fs'
-import path from 'node:path'
-import { join, resolve } from 'node:path'
+import path, { join, resolve } from 'node:path'
 import {
   getBuilderOptions,
   loadPreviewOrConfigFile,
