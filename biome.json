@@ -18,6 +18,7 @@
     "useIgnoreFile": true
   },
   "files": {
+    "ignore": [".yarn/releases"],
     "ignoreUnknown": true
   },
   "formatter": {

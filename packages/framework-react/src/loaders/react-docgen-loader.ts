@@ -20,7 +20,6 @@ import type {
   babelTypes as t,
 } from 'react-docgen'
 import * as TsconfigPaths from 'tsconfig-paths'
-// @ts-expect-error can not reexport `LoaderContext` from @rsbuild/core
 import type { LoaderContext } from 'webpack'
 
 import {

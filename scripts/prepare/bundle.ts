@@ -194,7 +194,8 @@ async function getDTSConfigs({
     tsconfig: tsConfigPath,
     dts: {
       entry: entries,
-      resolve: true,
+      // fails resolving webpack types
+      resolve: false,
     },
   }
 

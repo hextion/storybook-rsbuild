@@ -53,10 +53,10 @@
     "!src/**/*"
   ],
   "scripts": {
-    "build": "pnpm run prep --optimized",
+    "build": "yarn run prep --optimized",
     "check": "jiti ../../scripts/prepare/check.ts",
     "prep": "jiti ../../scripts/prepare/bundle.ts",
-    "prepare": "pnpm run build"
+    "prepare": "yarn run build"
   },
   "dependencies": {
     "@rsbuild/plugin-type-check": "^1.2.2",
@@ -93,7 +93,7 @@
     "pretty-hrtime": "^1.0.3",
     "slash": "^5.1.0",
     "storybook": "^7.6.24",
-    "typescript": "^5.7.3"
+    "typescript": "*"
   },
   "peerDependencies": {
     "@rsbuild/core": "^1.0.1",

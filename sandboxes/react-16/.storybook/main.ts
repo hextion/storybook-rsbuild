@@ -1,5 +1,6 @@
 import { dirname, join } from 'node:path'
 import type { StorybookConfig } from '@balafla/storybook-react-rsbuild'
+import { mergeRsbuildConfig } from '@rsbuild/core'
 
 /**
  * This function is used to resolve the absolute path of a package.
@@ -35,6 +36,16 @@ const config: StorybookConfig = {
     check: true,
   },
   staticDirs: ['../public'],
+  rsbuildFinal: (config) => {
+    return mergeRsbuildConfig(config, {
+      source: {
+        alias: {
+          react: getAbsolutePath('react'),
+          'react-dom': getAbsolutePath('react-dom'),
+        },
+      },
+    })
+  },
 }
 
 export default config

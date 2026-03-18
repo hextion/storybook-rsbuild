@@ -27,8 +27,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          cache: 'pnpm'
-          node-version: '18.20.5'
+          cache: "pnpm"
+          node-version: "18.20.5"
 
       - name: Install Dependencies and build
         run: pnpm install --frozen-lockfile

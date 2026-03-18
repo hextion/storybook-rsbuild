@@ -22,6 +22,17 @@
       "dependsOn": ["build"],
       "inputs": ["build", "sandbox"],
       "outputs": ["{projectRoot}/storybook-static"]
+    },
+    "prepare": {
+      "dependsOn": [
+        {
+          "target": "prepare",
+          "params": "forward",
+          "dependencies": true
+        }
+      ],
+      "outputs": ["{projectRoot}/dist"],
+      "cache": true
     }
   },
   "defaultBase": "main"

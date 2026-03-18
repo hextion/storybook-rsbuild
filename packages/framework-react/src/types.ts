@@ -9,7 +9,7 @@ import type {
   TypescriptOptions as TypescriptOptionsBase,
 } from '@storybook/types'
 
-type FrameworkName = 'storybook-react-rsbuild'
+type FrameworkName = '@balafla/storybook-react-rsbuild'
 type BuilderName = '@balafla/storybook-builder-rsbuild'
 
 export type FrameworkOptions = {

@@ -2,12 +2,13 @@
   "name": "storybook-rsbuild-monorepo",
   "version": "0.0.0",
   "private": true,
+  "workspaces": ["packages/*", "sandboxes/*", "scripts", "website"],
   "scripts": {
-    "build": "cross-env NX_DAEMON=false nx run-many -t build --exclude @sandboxes/* --parallel=10",
-    "build:sandboxes": "cross-env NX_DAEMON=false nx run-many -t build:storybook --projects @sandboxes/* --parallel=10",
-    "check": "pnpm --parallel --filter \"./packages/**\" run check",
-    "check-dependency-version": "pnpm tsx CDVC.mts",
-    "dev": "pnpm --parallel --filter \"./packages/**\" run prep --watch",
+    "build": "cross-env NX_DAEMON=false nx run-many -t build --exclude \"@sandboxes/*\"",
+    "build:sandboxes": "cross-env NX_DAEMON=false nx run-many -t build:storybook --projects \"@sandboxes/*\"",
+    "check": "cross-env NX_DAEMON=false nx run-many -t check",
+    "check-dependency-version": "yarn tsx CDVC.mts",
+    "dev": "yarn workspaces foreach -Ap run prepare --watch",
     "lint": "biome check",
     "test": "cross-env NODE_OPTIONS=--max_old_space_size=4096 vitest run",
     "test:watch": "cross-env NODE_OPTIONS=--max_old_space_size=4096 vitest watch"
@@ -19,6 +20,10 @@
     "*.{json,css,less,scss}": "biome check --write",
     "*.{js,jsx,ts,tsx,mjs,cjs}": "biome check --write",
     "**/package.json": ["sort-package-json", "biome check --write"]
+  },
+  "resolutions": {
+    "esbuild": "^0.27.4",
+    "typescript": "^5.9.3"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
@@ -33,8 +38,8 @@
     "sort-package-json": "^2.12.0",
     "ts-dedent": "^2.2.0",
     "tsx": "^4.19.4",
-    "typescript": "^5.7.3",
+    "typescript": "*",
     "vitest": "^2.1.9"
   },
-  "packageManager": "pnpm@10.32.1"
+  "packageManager": "yarn@4.13.0"
 }
