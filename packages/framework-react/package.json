@@ -41,8 +41,7 @@
   "scripts": {
     "build": "yarn run prep --optimized",
     "check": "jiti ../../scripts/prepare/check.ts",
-    "prep": "jiti ../../scripts/prepare/bundle.ts",
-    "prepare": "yarn run build"
+    "prep": "jiti ../../scripts/prepare/bundle.ts"
   },
   "dependencies": {
     "@balafla/storybook-builder-rsbuild": "^1.0.3",

@@ -1,12 +1,15 @@
 # React v18 + Rslib + Module Federation
 
 Run Storybook
-1. 
+
+1.
+
 ```bash
 pnpm dev
 ```
 
-2. 
+2.
+
 ```bash
 pnpm storybook
 ```

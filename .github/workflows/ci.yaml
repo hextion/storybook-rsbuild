@@ -1,61 +1,57 @@
 name: CI
 
-# Controls when the action will run.
 on:
-  # Triggers the workflow on pull request events but only for the main branch
   pull_request:
-    branches: [main]
-
+    branches: [storybook-v7]
   push:
-    branches: [main]
+    branches: [storybook-v7]
 
-  merge_group:
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # ======== test ========
-  test-build:
+  build:
     strategy:
+      fail-fast: false
       matrix:
         node-version: [20.x, 22.x, 24.x]
-        os: [ubuntu-latest, macos-14, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    continue-on-error: true
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 10
+        uses: actions/checkout@v6
 
-      - name: Install Pnpm
-        run: |
-          npm install -g corepack@latest --force
-          corepack enable
-
-      - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+      - name: Setup CI
+        uses: ./.github/actions/ci-setup
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "pnpm"
 
       - name: Install Dependencies
         run: |
-          pnpm install --frozen-lockfile
+          yarn install --frozen-lockfile
 
-      - name: Lint / Type Check / Check Dependency Version
+      - name: Lint
         run: |
-          pnpm lint
-          pnpm check
-          pnpm check-dependency-version
+          yarn lint
+
+      - name: Format
+        run: |
+          yarn format
+
+      - name: Type Check
+        run: |
+          yarn check
+
+      - name: Check Dependency Version
+        run: |
+          yarn check-dependency-version
 
       - name: Test
         run: |
-          pnpm test
+          yarn test
+
+      - name: Build
+        run: |
+          yarn build
 
       - name: Build sandboxes storybooks
         run: |
-          pnpm run build:sandboxes
+          yarn build:sandboxes

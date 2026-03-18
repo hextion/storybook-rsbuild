@@ -12,9 +12,9 @@
 ### Usage
 
 ```ts
-import reactDocgenTypescript from '@joshwooding/vite-plugin-react-docgen-typescript'
+import reactDocgenTypescript from '@joshwooding/vite-plugin-react-docgen-typescript';
 
 export default {
   plugins: [reactDocgenTypescript()],
-}
+};
 ```

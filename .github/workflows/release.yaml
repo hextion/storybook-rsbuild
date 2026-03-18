@@ -1,54 +1,39 @@
-# .github/workflows/release.yml
-
 name: Release
 
-permissions:
-  contents: write
+on:
+  push:
+    branches: [storybook-v7]
 
-on: workflow_dispatch
+concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
   release:
+    name: Release
+    if: github.repository == 'hextion/storybook-rsbuild'
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write # to create release (changesets/action)
+      issues: write # to post issue comments (changesets/action)
+      pull-requests: write # to create pull request (changesets/action)
+      id-token: write # to use OpenID Connect token for trusted publishing (changesets/action)
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+
+      - name: Setup CI
+        uses: ./.github/actions/ci-setup
         with:
-          fetch-depth: 0
+          node-version-file: "${{ github.workspace }}/.nvmrc"
 
-      - name: Setup npmrc
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> .npmrc
-
-      - name: Install Pnpm
-        run: |
-          npm install -g corepack@latest --force
-          corepack enable
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Create Release Pull Request or Publish to npm
+        # https://github.com/changesets/action
+        uses: changesets/action@v1
         with:
-          cache: "pnpm"
-          node-version: "18.20.5"
-
-      - name: Install Dependencies and build
-        run: pnpm install --frozen-lockfile
-
-      - uses: actions/github-script@v7
-        id: version_to_release
-        with:
-          result-encoding: string
-          script: |
-            const fs = require('fs');
-            const packageJson = JSON.parse(fs.readFileSync('./packages/builder-rsbuild/package.json', 'utf8'));
-            return 'v' + packageJson.version;
-
-      - name: Publish to NPM
-        run: |
-          git tag ${{ steps.version_to_release.outputs.result }}
-          git push origin ${{ steps.version_to_release.outputs.result }}
-          pnpm -r publish --no-git-checks
-
-      - name: GitHub Release
-        run: pnpx changelogithub
+          # this expects you to have a script called release which does a build for your packages and calls changeset publish
+          publish: yarn release
+          version: yarn version-packages
+          commit: 'chore: version-packages'
         env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
