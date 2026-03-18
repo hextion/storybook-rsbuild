@@ -1,6 +1,6 @@
 {
   "name": "@balafla/storybook-builder-rsbuild",
-  "version": "1.0.3",
+  "version": "0.0.1",
   "description": "Rsbuild builder for Storybook",
   "keywords": [
     "storybook",

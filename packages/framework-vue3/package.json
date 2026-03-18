@@ -1,6 +1,6 @@
 {
   "name": "@balafla/storybook-vue3-rsbuild",
-  "version": "1.0.3",
+  "version": "0.0.1",
   "description": "Storybook for Vue3 and Rsbuild: Develop React Component in isolation with Hot Reloading.",
   "keywords": [
     "storybook",
@@ -51,7 +51,7 @@
     "prep": "jiti ../../scripts/prepare/bundle.ts"
   },
   "dependencies": {
-    "@balafla/storybook-builder-rsbuild": "^1.0.3",
+    "@balafla/storybook-builder-rsbuild": "^0.0.1",
     "@storybook/docs-tools": "^7.6.24",
     "@storybook/types": "^7.6.24",
     "@storybook/vue3": "^7.6.24",

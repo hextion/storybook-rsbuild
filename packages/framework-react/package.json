@@ -1,6 +1,6 @@
 {
   "name": "@balafla/storybook-react-rsbuild",
-  "version": "1.0.3",
+  "version": "0.0.1",
   "description": "Storybook for React and Rsbuild: Develop React components in isolation with Hot Reloading.",
   "keywords": [
     "storybook",
@@ -55,7 +55,7 @@
     "prep": "jiti ../../scripts/prepare/bundle.ts"
   },
   "dependencies": {
-    "@balafla/storybook-builder-rsbuild": "^1.0.3",
+    "@balafla/storybook-builder-rsbuild": "^0.0.1",
     "@rollup/pluginutils": "^5.1.4",
     "@storybook/docs-tools": "^7.6.24",
     "@storybook/node-logger": "^7.6.24",

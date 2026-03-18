@@ -1,6 +1,6 @@
 {
   "name": "@balafla/storybook-html-rsbuild",
-  "version": "1.0.3",
+  "version": "0.0.1",
   "description": "Storybook for HTML and Rsbuild: View HTML snippets in isolation with Hot Reloading.",
   "keywords": [
     "storybook",
@@ -48,7 +48,7 @@
     "prep": "jiti ../../scripts/prepare/bundle.ts"
   },
   "dependencies": {
-    "@balafla/storybook-builder-rsbuild": "^1.0.3",
+    "@balafla/storybook-builder-rsbuild": "^0.0.1",
     "@storybook/html": "^7.6.24"
   },
   "devDependencies": {

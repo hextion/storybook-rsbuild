@@ -10,7 +10,7 @@
     "storybook": "storybook dev -p 6007"
   },
   "devDependencies": {
-    "@balafla/storybook-web-components-rsbuild": "^1.0.3",
+    "@balafla/storybook-web-components-rsbuild": "^0.0.1",
     "@rsbuild/core": "^1.3.22",
     "@rsbuild/plugin-vue": "^1.0.7",
     "@storybook/addon-essentials": "^7.6.24",
