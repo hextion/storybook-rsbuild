@@ -13,7 +13,7 @@ import rsbuildConfig, {
 import { applyReactShims } from './react-shims'
 import type { RsbuildBuilder } from './types'
 
-export * from './preview/virtual-module-mapping'
+export { getVirtualModules } from '@storybook/builder-webpack5'
 export * from './types'
 
 type RsbuildDevServer = Awaited<

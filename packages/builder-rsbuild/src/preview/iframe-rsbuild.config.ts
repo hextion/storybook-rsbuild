@@ -2,8 +2,8 @@ import { dirname, join, resolve } from 'node:path'
 import type { RsbuildConfig, Rspack } from '@rsbuild/core'
 import { loadConfig, mergeRsbuildConfig } from '@rsbuild/core'
 import { pluginTypeCheck } from '@rsbuild/plugin-type-check'
-// @ts-expect-error forced resolve from `dist/index.d.ts` by typesVersions.
 import { webpack as docsWebpack } from '@storybook/addon-docs/preset'
+import { getVirtualModules } from '@storybook/builder-webpack5'
 import {
   getBuilderOptions,
   isPreservingSymlinks,
@@ -12,12 +12,10 @@ import {
 } from '@storybook/core-common'
 import { globalsNameReferenceMap } from '@storybook/preview/globals'
 import type { Options } from '@storybook/types'
-// @ts-expect-error (I removed this on purpose, because it's incorrect)
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin'
 import { pluginHtmlMinifierTerser } from 'rsbuild-plugin-html-minifier-terser'
 import { dedent } from 'ts-dedent'
 import type { BuilderOptions, TypescriptOptions } from '../types'
-import { getVirtualModules } from './virtual-module-mapping'
 
 const getAbsolutePath = <I extends string>(input: I): I =>
   dirname(require.resolve(join(input, 'package.json'))) as any
@@ -70,7 +68,10 @@ export default async (
 ): Promise<RsbuildConfig> => {
   const { rsbuildConfigPath, addonDocs } =
     await getBuilderOptions<BuilderOptions>(options)
-  const appliedDocsWebpack = await docsWebpack({}, { ...options, ...addonDocs })
+  const appliedDocsWebpack: Rspack.Configuration = await docsWebpack(
+    {},
+    { ...options, ...addonDocs },
+  )
   const {
     outputDir = join('.', 'public'),
     quiet,
@@ -149,8 +150,7 @@ export default async (
     externals['@storybook/blocks'] = '__STORYBOOK_BLOCKS_EMPTY_MODULE__'
   }
 
-  // TODO: Rspack doesn't support virtual modules yet, use cache dir instead
-  const { virtualModules: _virtualModules, entries: dynamicEntries } =
+  const { virtualModules: virtualModuleMapping, entries: dynamicEntries } =
     await getVirtualModules(options)
 
   if (!options.cache) {
@@ -244,9 +244,6 @@ export default async (
       progressBar: !quiet,
     },
     source: {
-      // TODO: Rspack doesn't support virtual modules yet, use cache dir instead
-      // we needed to explicitly set the module in `node_modules` to be compiled
-      include: [/[\\/]node_modules[\\/].*[\\/]storybook-config-entry\.js/],
       alias: {
         ...storybookPaths,
       },
@@ -348,6 +345,7 @@ export default async (
               process: require.resolve('process/browser.js'),
             }),
             new CaseSensitivePathsPlugin(),
+            new rspack.experiments.VirtualModulesPlugin(virtualModuleMapping),
           ].filter(Boolean),
         )
 
