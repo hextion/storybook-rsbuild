@@ -14,12 +14,14 @@
     "check": "cross-env NX_DAEMON=false nx run-many -t check",
     "check-dependency-version": "jiti CDVC.mts",
     "dev": "yarn workspaces foreach -Ap run prepare --watch",
-    "format": "prettier \"./**/*.{md,yml}\" --check",
+    "format": "prettier \"./**/*.{md,yaml}\" --check",
     "lint": "biome check",
     "release": "yarn build && changeset publish",
+    "release:snapshot": "yarn build && yarn changeset publish --tag snapshot --no-git-tag",
     "test": "cross-env NODE_OPTIONS=--max_old_space_size=4096 vitest run",
     "test:watch": "cross-env NODE_OPTIONS=--max_old_space_size=4096 vitest watch",
-    "version-packages": "changeset version && yarn install --mode update-lockfile && yarn lint --write && yarn format --write"
+    "version-packages": "changeset version && yarn install --mode update-lockfile && yarn lint --write && yarn format --write",
+    "version-packages:snapshot": "yarn changeset version --snapshot"
   },
   "simple-git-hooks": {
     "pre-commit": "yarn nano-staged"
@@ -31,7 +33,7 @@
       "sort-package-json",
       "biome check --write"
     ],
-    "*.{md,yml}": "prettier --write"
+    "*.{md,yaml}": "prettier --write"
   },
   "resolutions": {
     "esbuild": "^0.27.4",

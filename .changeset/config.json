@@ -24,5 +24,9 @@
     "updateInternalDependents": "always"
   },
   "updateInternalDependencies": "patch",
-  "ignore": []
+  "ignore": [],
+  "snapshot": {
+    "prereleaseTemplate": "{commit}",
+    "useCalculatedVersion": true
+  }
 }
