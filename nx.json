@@ -35,5 +35,6 @@
       "cache": true
     }
   },
-  "defaultBase": "storybook-v7"
+  "defaultBase": "storybook-v7",
+  "analytics": false
 }

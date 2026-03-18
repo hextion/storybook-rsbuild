@@ -9,9 +9,9 @@
     "website"
   ],
   "scripts": {
-    "build": "cross-env NX_DAEMON=false nx run-many -t build --exclude \"@sandboxes/*\"",
-    "build:sandboxes": "cross-env NX_DAEMON=false nx run-many -t build:storybook --projects \"@sandboxes/*\"",
-    "check": "cross-env NX_DAEMON=false nx run-many -t check",
+    "build": "nx run-many -t build --exclude \"@sandboxes/*\"",
+    "build:sandboxes": "nx run-many -t build:storybook --projects \"@sandboxes/*\"",
+    "check": "nx run-many -t check",
     "check-dependency-version": "jiti CDVC.mts",
     "dev": "yarn workspaces foreach -Ap run prepare --watch",
     "format": "prettier \"./**/*.{md,yaml}\" --check",
@@ -48,7 +48,7 @@
     "cross-env": "^7.0.3",
     "jiti": "^2.6.1",
     "nano-staged": "^0.8.0",
-    "nx": "^20.4.6",
+    "nx": "^22.6.0",
     "prettier": "^3.8.1",
     "simple-git-hooks": "^2.11.1",
     "sort-package-json": "^2.12.0",
