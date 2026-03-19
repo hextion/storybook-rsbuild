@@ -6,6 +6,10 @@ on:
   push:
     branches: [storybook-v7]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     strategy:
