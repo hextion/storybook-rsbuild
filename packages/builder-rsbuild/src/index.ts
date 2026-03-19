@@ -95,10 +95,7 @@ const rsbuild = async (_: unknown, options: RsbuildBuilderOptions) => {
   let defaultConfig = await rsbuildConfig(options, webpackAddonsConfig)
   const shimsConfig = await applyReactShims(defaultConfig, options)
 
-  defaultConfig = rsbuildReal.mergeRsbuildConfig(
-    defaultConfig,
-    shimsConfig,
-  ) as rsbuildReal.RsbuildConfig
+  defaultConfig = rsbuildReal.mergeRsbuildConfig(defaultConfig, shimsConfig)
 
   const finalDefaultConfig = await presets.apply(
     'rsbuildFinal',

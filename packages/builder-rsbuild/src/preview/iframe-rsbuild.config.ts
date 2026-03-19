@@ -328,8 +328,7 @@ export default async (
       },
       htmlPlugin: {
         filename: 'iframe.html',
-        // FIXME: `none` isn't a known option
-        chunksSortMode: 'none' as any,
+        chunksSortMode: 'none',
         alwaysWriteToDisk: true,
         inject: false,
         template,

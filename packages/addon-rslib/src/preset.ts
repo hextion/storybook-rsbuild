@@ -15,7 +15,7 @@ export const rsbuildFinal: StorybookConfigRsbuild['rsbuildFinal'] = async (
   const { rslib = {} } = options
   const { cwd, configPath, libIndex = 0 } = rslib
   const { content } = await loadConfig({
-    cwd: cwd,
+    cwd,
     path: configPath,
   })
 

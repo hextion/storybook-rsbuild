@@ -2,6 +2,7 @@
  * Code taken from https://github.com/storybookjs/storybook/tree/next/code/presets/react-webpack/src/loaders
  */
 
+import type { Rspack } from '@rsbuild/core'
 import { logger } from '@storybook/node-logger'
 import findUp from 'find-up'
 import MagicString from 'magic-string'
@@ -20,7 +21,6 @@ import {
   utils,
 } from 'react-docgen'
 import * as TsconfigPaths from 'tsconfig-paths'
-import type { LoaderContext } from 'webpack'
 
 import {
   defaultLookupModule,
@@ -101,7 +101,7 @@ const finishInitialization = () => {
 let matchPath: TsconfigPaths.MatchPath | undefined
 
 export default async function reactDocgenLoader(
-  this: LoaderContext<{ debug: boolean }>,
+  this: Rspack.LoaderContext<{ debug: boolean }>,
   source: string,
   map: any,
 ) {
