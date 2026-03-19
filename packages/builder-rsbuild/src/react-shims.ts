@@ -49,7 +49,7 @@ export const applyReactShims = async (
   const isReactModern = await getIsReactModern(options)
   if (isReactModern) {
     return {
-      source: {
+      resolve: {
         alias: {
           '@storybook/react-dom-shim':
             '@storybook/react-dom-shim/dist/react-18',

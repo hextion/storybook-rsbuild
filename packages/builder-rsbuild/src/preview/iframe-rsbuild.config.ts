@@ -243,10 +243,10 @@ export default async (
       assetPrefix: '/',
       progressBar: !quiet,
     },
+    resolve: {
+      alias: storybookPaths,
+    },
     source: {
-      alias: {
-        ...storybookPaths,
-      },
       entry: {
         // to avoid `It's not allowed to load an initial chunk on demand. The chunk name "main" is already used by an entrypoint` of
         main: [...(entries ?? []), ...dynamicEntries],

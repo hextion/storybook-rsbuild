@@ -38,7 +38,7 @@ const config: StorybookConfig = {
   staticDirs: ['../public'],
   rsbuildFinal: (config) => {
     return mergeRsbuildConfig(config, {
-      source: {
+      resolve: {
         alias: {
           react: getAbsolutePath('react'),
           'react-dom': getAbsolutePath('react-dom'),
