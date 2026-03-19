@@ -51,7 +51,7 @@ jobs:
       - name: Setup CI
         uses: ./.github/actions/ci-setup
         with:
-          node-version-file: '${{ github.workspace }}/.nvmrc'
+          node-version-file: '.nvmrc'
 
       - name: Snapshot release
         id: snapshot_release
