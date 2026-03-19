@@ -1,4 +1,4 @@
-import { dirname, join, resolve } from 'node:path'
+import { join, resolve } from 'node:path'
 import type { RsbuildConfig, Rspack } from '@rsbuild/core'
 import { loadConfig, mergeRsbuildConfig } from '@rsbuild/core'
 import { pluginTypeCheck } from '@rsbuild/plugin-type-check'
@@ -17,16 +17,6 @@ import { pluginHtmlMinifierTerser } from 'rsbuild-plugin-html-minifier-terser'
 import { dedent } from 'ts-dedent'
 import type { BuilderOptions, TypescriptOptions } from '../types'
 
-const getAbsolutePath = <I extends string>(input: I): I =>
-  dirname(require.resolve(join(input, 'package.json'))) as any
-const maybeGetAbsolutePath = <I extends string>(input: I): I | false => {
-  try {
-    return getAbsolutePath(input)
-  } catch (_e) {
-    return false
-  }
-}
-
 const builtInResolveExtensions = [
   '.mjs',
   '.js',
@@ -36,27 +26,6 @@ const builtInResolveExtensions = [
   '.json',
   '.cjs',
 ]
-
-const managerAPIPath = maybeGetAbsolutePath('@storybook/manager-api')
-const componentsPath = maybeGetAbsolutePath('@storybook/components')
-const globalPath = maybeGetAbsolutePath('@storybook/global')
-const routerPath = maybeGetAbsolutePath('@storybook/router')
-const themingPath = maybeGetAbsolutePath('@storybook/theming')
-
-// these packages are not pre-bundled because of react dependencies.
-// these are not dependencies of the builder anymore, thus resolving them can fail.
-// we should remove the aliases in 8.0, I'm not sure why they are here in the first place.
-const storybookPaths: Record<string, string> = {
-  ...(managerAPIPath
-    ? {
-        '@storybook/manager-api': managerAPIPath,
-      }
-    : {}),
-  ...(componentsPath ? { '@storybook/components': componentsPath } : {}),
-  ...(globalPath ? { '@storybook/global': globalPath } : {}),
-  ...(routerPath ? { '@storybook/router': routerPath } : {}),
-  ...(themingPath ? { '@storybook/theming': themingPath } : {}),
-}
 
 export type RsbuildBuilderOptions = Options & {
   typescriptOptions: TypescriptOptions
@@ -242,9 +211,6 @@ export default async (
     dev: {
       assetPrefix: '/',
       progressBar: !quiet,
-    },
-    resolve: {
-      alias: storybookPaths,
     },
     source: {
       entry: {
