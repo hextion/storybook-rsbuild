@@ -208,7 +208,7 @@ export default async (
     ? 'static/media/[name].[contenthash:8][ext]'
     : 'static/media/[path][name][ext]'
 
-  const rsbuildConfig = mergeRsbuildConfig(contentFromConfig, {
+  return mergeRsbuildConfig(contentFromConfig, {
     output: {
       cleanDistPath: false,
       assetPrefix: '/',
@@ -278,8 +278,6 @@ export default async (
     ].filter(Boolean),
     tools: {
       rspack: (config, { addRules, appendPlugins, rspack, mergeConfig }) => {
-        // TODO: Rspack doesn't support `unknownContextCritical` yet
-        // config.module.unknownContextCritical = false
         addRules({
           test: /\.stories\.([tj])sx?$|(stories|story)\.mdx$/,
           exclude: /node_modules/,
@@ -338,6 +336,7 @@ export default async (
         config.module.parser ??= {}
         config.module.parser.javascript ??= {}
         config.module.parser.javascript.exportsPresence = false
+        config.module.parser.javascript.unknownContextCritical = false
 
         appendPlugins(
           [
@@ -394,6 +393,4 @@ export default async (
       },
     },
   })
-
-  return rsbuildConfig
 }
