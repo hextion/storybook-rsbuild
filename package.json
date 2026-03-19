@@ -21,7 +21,7 @@
     "test": "cross-env NODE_OPTIONS=--max_old_space_size=4096 vitest run",
     "test:watch": "cross-env NODE_OPTIONS=--max_old_space_size=4096 vitest watch",
     "version-packages": "changeset version && yarn install --mode update-lockfile && yarn lint --write && yarn format --write",
-    "version-packages:snapshot": "yarn changeset version --snapshot"
+    "version-packages:snapshot": "yarn changeset version --snapshot && yarn install --mode update-lockfile"
   },
   "simple-git-hooks": {
     "pre-commit": "yarn nano-staged"
