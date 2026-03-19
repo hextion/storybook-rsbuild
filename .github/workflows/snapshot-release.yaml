@@ -1,0 +1,95 @@
+name: Snapshot release
+
+on:
+  workflow_dispatch:
+    inputs:
+      pull-request:
+        type: number
+        description: Pull request number
+        required: true
+
+concurrency:
+  group: ${{ github.workflow }}-${{ inputs.pull-request }}
+  cancel-in-progress: true
+
+jobs:
+  snapshot_release:
+    name: Snapshot release
+    if: github.repository == 'hextion/storybook-rsbuild'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write # to post issue comments (changesets/action)
+      id-token: write # to use OpenID Connect token for trusted publishing (changesets/action)
+    outputs:
+      published: ${{ steps.snapshot_release.outputs.published }}
+      published-packages: ${{ steps.snapshot_release.outputs.published-packages }}
+    steps:
+      - name: Get pull request data
+        id: data
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const { data } = await octokit.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: ${{ inputs.pull-request }},
+            })
+
+            if (data.head.repo.fork) {
+              core.setOutput('repository', data.head.repo.full_name)
+            }
+
+            core.setOutput('sha', data.head.sha)
+
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ steps.data.outputs.repository }}
+          ref: ${{ steps.data.outputs.sha }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup CI
+        uses: ./.github/actions/ci-setup
+        with:
+          node-version-file: '${{ github.workspace }}/.nvmrc'
+
+      - name: Snapshot release
+        id: snapshot_release
+        uses: core-ds/changesets-snapshot-release@v1
+        with:
+          version: 'yarn version-packages:snapshot'
+          publish: 'yarn release:snapshot'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  comment:
+    name: Comment
+    needs: snapshot_release
+    if: ${{ fromJson(needs.snapshot_release.outputs.published) }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prepare comment
+        id: prepare_comment
+        uses: actions/github-script@v8
+        env:
+          PUBLISHED_PACKAGES: ${{ needs.snapshot_release.outputs.published-packages }}
+        with:
+          result-encoding: string
+          script: |
+            return JSON.parse(process.env.PUBLISHED_PACKAGES)
+                .map(({ name, version }, index) => `${index + 1}. \`${name}@${version}\``)
+                .join('\n\n')
+
+      - name: Create comment
+        uses: peter-evans/create-or-update-comment@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ inputs.pull-request }}
+          body: |
+            ## Snapshot release
+
+            Successfully released the following packages:
+
+            ${{ steps.prepare_comment.outputs.result }}
+          reactions: rocket

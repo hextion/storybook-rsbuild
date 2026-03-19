@@ -1,5 +1,5 @@
 import { dirname, join } from 'node:path'
-import type { StorybookConfig } from 'storybook-html-rsbuild'
+import type { StorybookConfig } from '@balafla/storybook-html-rsbuild'
 
 /**
  * This function is used to resolve the absolute path of a package.
@@ -12,13 +12,13 @@ function getAbsolutePath(value: string): any {
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
   addons: [
+    '@storybook/addon-docs',
     '@storybook/addon-links',
     '@storybook/addon-essentials',
-    '@chromatic-com/storybook',
     '@storybook/addon-interactions',
   ],
   framework: {
-    name: getAbsolutePath('storybook-html-rsbuild'),
+    name: getAbsolutePath('@balafla/storybook-html-rsbuild'),
     options: {},
   },
 }

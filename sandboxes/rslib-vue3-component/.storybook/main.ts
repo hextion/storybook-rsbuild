@@ -1,6 +1,6 @@
 import { dirname, join } from 'node:path'
+import type { StorybookConfig } from '@balafla/storybook-vue3-rsbuild'
 import { pluginVue } from '@rsbuild/plugin-vue'
-import type { StorybookConfig } from 'storybook-vue3-rsbuild'
 
 /**
  * This function is used to resolve the absolute path of a package.
@@ -13,13 +13,12 @@ function getAbsolutePath(value: string): any {
 const config: StorybookConfig = {
   stories: ['../stories/*.mdx', '../stories/*.stories.@(js|jsx|mjs|ts|tsx)'],
   addons: [
-    '@storybook/addon-onboarding',
+    '@storybook/addon-docs',
     '@storybook/addon-links',
     '@storybook/addon-essentials',
-    '@chromatic-com/storybook',
     '@storybook/addon-interactions',
     {
-      name: getAbsolutePath('storybook-addon-rslib'),
+      name: getAbsolutePath('@balafla/storybook-addon-rslib'),
       options: {
         rslib: {
           include: ['**/stories/**'],
@@ -28,7 +27,7 @@ const config: StorybookConfig = {
     },
   ],
   framework: {
-    name: getAbsolutePath('storybook-vue3-rsbuild'),
+    name: getAbsolutePath('@balafla/storybook-vue3-rsbuild'),
     options: {},
   },
   docs: {

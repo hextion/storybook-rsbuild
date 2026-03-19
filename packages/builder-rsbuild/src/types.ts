@@ -4,9 +4,9 @@ import type {
   Builder,
   BuilderResult as BuilderResultBase,
   Options,
-  StorybookConfigRaw,
+  StorybookConfig,
   TypescriptOptions as TypeScriptOptionsBase,
-} from 'storybook/internal/types'
+} from '@storybook/types'
 import type { Stats } from './index'
 
 // Storybook's Stats are optional Webpack related property
@@ -33,7 +33,7 @@ export type RsbuildFinal = (
 
 export type StorybookConfigRsbuild = {
   rsbuildFinal?: RsbuildFinal
-  webpackAddons?: StorybookConfigRaw['addons']
+  webpackAddons?: StorybookConfig['addons']
 }
 
 export type BuilderOptions = {

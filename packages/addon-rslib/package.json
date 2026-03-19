@@ -1,8 +1,14 @@
 {
-  "name": "storybook-addon-rslib",
-  "version": "1.0.3",
+  "name": "@balafla/storybook-addon-rslib",
+  "version": "0.0.1",
   "description": "Storybook addon for loading configuration of Rslib",
-  "keywords": ["storybook", "storybook-addons", "rsbuild", "rspack", "rslib"],
+  "keywords": [
+    "storybook",
+    "storybook-addons",
+    "rsbuild",
+    "rspack",
+    "rslib"
+  ],
   "homepage": "https://storybook.rsbuild.dev",
   "bugs": {
     "url": "https://github.com/rspack-contrib/storybook-rsbuild/issues"
@@ -25,25 +31,30 @@
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist/**/*", "README.md", "*.js", "*.d.ts", "!src/**/*"],
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "*.js",
+    "*.d.ts",
+    "!src/**/*"
+  ],
   "scripts": {
-    "build": "pnpm run prep --optimized",
-    "check": "node --loader ../../scripts/node_modules/esbuild-register/loader.js -r ../../scripts/node_modules/esbuild-register/register.js ../../scripts/prepare/check.ts",
-    "prep": "node --loader ../../scripts/node_modules/esbuild-register/loader.js -r ../../scripts/node_modules/esbuild-register/register.js ../../scripts/prepare/bundle.ts",
-    "prepare": "pnpm run build"
+    "build": "yarn run prep --optimized",
+    "check": "jiti ../../scripts/prepare/check.ts",
+    "prep": "jiti ../../scripts/prepare/bundle.ts"
   },
   "devDependencies": {
+    "@balafla/storybook-builder-rsbuild": "^0.0.1",
     "@rsbuild/core": "^1.3.22",
-    "@rslib/core": "^0.7.0",
-    "@types/node": "^18.0.0",
-    "storybook": "8.6.14",
-    "storybook-builder-rsbuild": "workspace:*",
-    "typescript": "^5.7.3"
+    "@rslib/core": "^0.19.6",
+    "@types/node": "^24.0.0",
+    "storybook": "^7.6.24",
+    "typescript": "*"
   },
   "peerDependencies": {
+    "@balafla/storybook-builder-rsbuild": "*",
     "@rsbuild/core": "^1.0.1",
-    "@rslib/core": ">= 0.1.1 || >= 0.2",
-    "storybook-builder-rsbuild": "*"
+    "@rslib/core": ">= 0.1.1 || >= 0.2"
   },
   "peerDependenciesMeta": {
     "typescript": {
@@ -54,7 +65,10 @@
     "access": "public"
   },
   "bundler": {
-    "entries": ["./src/index.ts", "./src/preset.ts"],
+    "entries": [
+      "./src/index.ts",
+      "./src/preset.ts"
+    ],
     "platform": "node"
   }
 }

@@ -1,13 +1,13 @@
-import { createBrowserChannel } from 'storybook/internal/channels'
-import {
-  PreviewWeb,
-  addons,
-  composeConfigs,
-} from 'storybook/internal/preview-api'
+import { importFn } from '{{storiesFilename}}'
+import { createBrowserChannel } from '@storybook/channels'
 
 import { global } from '@storybook/global'
-
-import { importFn } from '{{storiesFilename}}'
+import {
+  addons,
+  ClientApi,
+  composeConfigs,
+  PreviewWeb,
+} from '@storybook/preview-api'
 
 const getProjectAnnotations = () =>
   composeConfigs(['{{previewAnnotations_requires}}'])
@@ -24,6 +24,11 @@ const preview = new PreviewWeb(importFn, getProjectAnnotations)
 window.__STORYBOOK_PREVIEW__ = preview
 window.__STORYBOOK_STORY_STORE__ = preview.storyStore
 window.__STORYBOOK_ADDONS_CHANNEL__ = channel
+window.__STORYBOOK_CLIENT_API__ = new ClientApi({
+  storyStore: preview.storyStore,
+})
+
+preview.initialize({ importFn, getProjectAnnotations })
 
 if (import.meta.webpackHot) {
   import.meta.webpackHot.accept('{{storiesFilename}}', () => {

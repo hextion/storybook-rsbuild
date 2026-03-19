@@ -1,9 +1,9 @@
-import { type RsbuildConfig, mergeRsbuildConfig } from '@rsbuild/core'
-import { loadConfig } from '@rslib/core'
 import type {
   RsbuildFinal,
   StorybookConfigRsbuild,
-} from 'storybook-builder-rsbuild'
+} from '@balafla/storybook-builder-rsbuild'
+import { mergeRsbuildConfig, type RsbuildConfig } from '@rsbuild/core'
+import { loadConfig } from '@rslib/core'
 import type { AddonOptions } from './types'
 
 type BaseOptions = Parameters<RsbuildFinal>[1]
@@ -15,7 +15,7 @@ export const rsbuildFinal: StorybookConfigRsbuild['rsbuildFinal'] = async (
   const { rslib = {} } = options
   const { cwd, configPath, libIndex = 0 } = rslib
   const { content } = await loadConfig({
-    cwd: cwd,
+    cwd,
     path: configPath,
   })
 

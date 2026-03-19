@@ -50,7 +50,7 @@ function getTSDiagnostics(
   return ts.formatDiagnosticsWithColorAndContext(
     ts
       .getPreEmitDiagnostics(program)
-      .filter((d) => d.file.fileName.startsWith(cwd)),
+      .filter((d) => d.file?.fileName.startsWith(cwd)),
     host,
   )
 }

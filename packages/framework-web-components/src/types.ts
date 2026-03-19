@@ -2,14 +2,14 @@ import type {
   BuilderOptions,
   StorybookConfigRsbuild,
   TypescriptOptions as TypescriptOptionsBuilder,
-} from 'storybook-builder-rsbuild'
+} from '@balafla/storybook-builder-rsbuild'
 import type {
   StorybookConfig as StorybookConfigBase,
   TypescriptOptions as TypescriptOptionsWebComponents,
-} from 'storybook/internal/types'
+} from '@storybook/types'
 
-type FrameworkName = 'storybook-web-components-rsbuild'
-type BuilderName = 'storybook-builder-rsbuild'
+type FrameworkName = '@balafla/storybook-web-components-rsbuild'
+type BuilderName = '@balafla/storybook-builder-rsbuild'
 
 export type FrameworkOptions = {
   builder?: BuilderOptions

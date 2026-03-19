@@ -1,34 +1,21 @@
-import { dirname, join, resolve } from 'node:path'
-import { loadConfig, mergeRsbuildConfig } from '@rsbuild/core'
+import { join, resolve } from 'node:path'
 import type { RsbuildConfig, Rspack } from '@rsbuild/core'
+import { loadConfig, mergeRsbuildConfig } from '@rsbuild/core'
 import { pluginTypeCheck } from '@rsbuild/plugin-type-check'
-// @ts-expect-error forced resolve from `dist/index.d.ts` by typesVersions.
 import { webpack as docsWebpack } from '@storybook/addon-docs/preset'
-// @ts-expect-error (I removed this on purpose, because it's incorrect)
-import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin'
-import { pluginHtmlMinifierTerser } from 'rsbuild-plugin-html-minifier-terser'
+import { getVirtualModules } from '@storybook/builder-webpack5'
 import {
   getBuilderOptions,
   isPreservingSymlinks,
   normalizeStories,
   stringifyProcessEnvs,
-} from 'storybook/internal/common'
-import { globalsNameReferenceMap } from 'storybook/internal/preview/globals'
-import type { Options } from 'storybook/internal/types'
+} from '@storybook/core-common'
+import { globalsNameReferenceMap } from '@storybook/preview/globals'
+import type { Options } from '@storybook/types'
+import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin'
+import { pluginHtmlMinifierTerser } from 'rsbuild-plugin-html-minifier-terser'
 import { dedent } from 'ts-dedent'
-import type { BuilderOptions } from '../types'
-import type { TypescriptOptions } from '../types'
-import { getVirtualModules } from './virtual-module-mapping'
-
-const getAbsolutePath = <I extends string>(input: I): I =>
-  dirname(require.resolve(join(input, 'package.json'))) as any
-const maybeGetAbsolutePath = <I extends string>(input: I): I | false => {
-  try {
-    return getAbsolutePath(input)
-  } catch (e) {
-    return false
-  }
-}
+import type { BuilderOptions, TypescriptOptions } from '../types'
 
 const builtInResolveExtensions = [
   '.mjs',
@@ -40,27 +27,6 @@ const builtInResolveExtensions = [
   '.cjs',
 ]
 
-const managerAPIPath = maybeGetAbsolutePath('@storybook/manager-api')
-const componentsPath = maybeGetAbsolutePath('@storybook/components')
-const globalPath = maybeGetAbsolutePath('@storybook/global')
-const routerPath = maybeGetAbsolutePath('@storybook/router')
-const themingPath = maybeGetAbsolutePath('@storybook/theming')
-
-// these packages are not pre-bundled because of react dependencies.
-// these are not dependencies of the builder anymore, thus resolving them can fail.
-// we should remove the aliases in 8.0, I'm not sure why they are here in the first place.
-const storybookPaths: Record<string, string> = {
-  ...(managerAPIPath
-    ? {
-        '@storybook/manager-api': managerAPIPath,
-      }
-    : {}),
-  ...(componentsPath ? { '@storybook/components': componentsPath } : {}),
-  ...(globalPath ? { '@storybook/global': globalPath } : {}),
-  ...(routerPath ? { '@storybook/router': routerPath } : {}),
-  ...(themingPath ? { '@storybook/theming': themingPath } : {}),
-}
-
 export type RsbuildBuilderOptions = Options & {
   typescriptOptions: TypescriptOptions
 }
@@ -71,7 +37,10 @@ export default async (
 ): Promise<RsbuildConfig> => {
   const { rsbuildConfigPath, addonDocs } =
     await getBuilderOptions<BuilderOptions>(options)
-  const appliedDocsWebpack = await docsWebpack({}, { ...options, ...addonDocs })
+  const appliedDocsWebpack: Rspack.Configuration = await docsWebpack(
+    {},
+    { ...options, ...addonDocs },
+  )
   const {
     outputDir = join('.', 'public'),
     quiet,
@@ -150,8 +119,7 @@ export default async (
     externals['@storybook/blocks'] = '__STORYBOOK_BLOCKS_EMPTY_MODULE__'
   }
 
-  // TODO: Rspack doesn't support virtual modules yet, use cache dir instead
-  const { virtualModules: _virtualModules, entries: dynamicEntries } =
+  const { virtualModules: virtualModuleMapping, entries: dynamicEntries } =
     await getVirtualModules(options)
 
   if (!options.cache) {
@@ -209,7 +177,7 @@ export default async (
     ? 'static/media/[name].[contenthash:8][ext]'
     : 'static/media/[path][name][ext]'
 
-  const rsbuildConfig = mergeRsbuildConfig(contentFromConfig, {
+  return mergeRsbuildConfig(contentFromConfig, {
     output: {
       cleanDistPath: false,
       assetPrefix: '/',
@@ -245,12 +213,6 @@ export default async (
       progressBar: !quiet,
     },
     source: {
-      // TODO: Rspack doesn't support virtual modules yet, use cache dir instead
-      // we needed to explicitly set the module in `node_modules` to be compiled
-      include: [/[\\/]node_modules[\\/].*[\\/]storybook-config-entry\.js/],
-      alias: {
-        ...storybookPaths,
-      },
       entry: {
         // to avoid `It's not allowed to load an initial chunk on demand. The chunk name "main" is already used by an entrypoint` of
         main: [...(entries ?? []), ...dynamicEntries],
@@ -282,8 +244,6 @@ export default async (
     ].filter(Boolean),
     tools: {
       rspack: (config, { addRules, appendPlugins, rspack, mergeConfig }) => {
-        // TODO: Rspack doesn't support `unknownContextCritical` yet
-        // config.module.unknownContextCritical = false
         addRules({
           test: /\.stories\.([tj])sx?$|(stories|story)\.mdx$/,
           exclude: /node_modules/,
@@ -291,7 +251,7 @@ export default async (
           use: [
             {
               loader: require.resolve(
-                'storybook-builder-rsbuild/loaders/export-order-loader',
+                '@balafla/storybook-builder-rsbuild/loaders/export-order-loader',
               ),
             },
           ],
@@ -342,6 +302,7 @@ export default async (
         config.module.parser ??= {}
         config.module.parser.javascript ??= {}
         config.module.parser.javascript.exportsPresence = false
+        config.module.parser.javascript.unknownContextCritical = false
 
         appendPlugins(
           [
@@ -349,6 +310,7 @@ export default async (
               process: require.resolve('process/browser.js'),
             }),
             new CaseSensitivePathsPlugin(),
+            new rspack.experiments.VirtualModulesPlugin(virtualModuleMapping),
           ].filter(Boolean),
         )
 
@@ -366,8 +328,7 @@ export default async (
       },
       htmlPlugin: {
         filename: 'iframe.html',
-        // FIXME: `none` isn't a known option
-        chunksSortMode: 'none' as any,
+        chunksSortMode: 'none',
         alwaysWriteToDisk: true,
         inject: false,
         template,
@@ -397,6 +358,4 @@ export default async (
       },
     },
   })
-
-  return rsbuildConfig
 }
