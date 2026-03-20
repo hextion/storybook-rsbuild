@@ -12,16 +12,22 @@
     "sandbox": ["{projectRoot}/.storybook/**/*"]
   },
   "targetDefaults": {
-    "build": {
-      "cache": true,
-      "inputs": ["build", "^build"],
-      "outputs": ["{projectRoot}/dist"]
-    },
     "build:storybook": {
       "cache": true,
       "dependsOn": ["build"],
       "inputs": ["build", "sandbox"],
       "outputs": ["{projectRoot}/storybook-static"]
+    },
+    "build": {
+      "dependsOn": [
+        {
+          "target": "build",
+          "params": "forward",
+          "dependencies": true
+        }
+      ],
+      "outputs": ["{projectRoot}/dist"],
+      "cache": true
     },
     "check": {
       "dependsOn": [
@@ -30,9 +36,7 @@
           "params": "forward",
           "dependencies": true
         }
-      ],
-      "outputs": ["{projectRoot}/dist"],
-      "cache": true
+      ]
     }
   },
   "defaultBase": "storybook-v7",
