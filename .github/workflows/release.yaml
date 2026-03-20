@@ -53,9 +53,6 @@ jobs:
     name: Snapshot release
     if: ${{ github.event_name == 'workflow_dispatch' && github.repository == 'hextion/storybook-rsbuild' }}
     runs-on: ubuntu-latest
-    permissions:
-      issues: write # to post issue comments (changesets/action)
-      id-token: write # to use OpenID Connect token for trusted publishing (changesets/action)
     outputs:
       published: ${{ steps.snapshot_release.outputs.published }}
       published-packages: ${{ steps.snapshot_release.outputs.published-packages }}
@@ -71,11 +68,19 @@ jobs:
               pull_number: ${{ inputs.pull-request }},
             })
 
-            if (data.head.repo.fork) {
-              core.setOutput('repository', data.head.repo.full_name)
-            }
-
+            core.setOutput('repository', data.head.repo.full_name)
+            core.setOutput('owner', data.head.repo.owner.login)
+            core.setOutput('repo', data.head.repo.name)
             core.setOutput('sha', data.head.sha)
+
+      - name: generate app token
+        id: generate-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          owner: ${{ steps.data.outputs.owner }}
+          repositories: ${{ steps.data.outputs.repo }}
 
       - name: Checkout
         uses: actions/checkout@v6
@@ -96,14 +101,15 @@ jobs:
           version: 'yarn version-packages:snapshot'
           publish: 'yarn release:snapshot'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
 
   comment:
     name: Comment
     needs: snapshot_release
     if: ${{ fromJson(needs.snapshot_release.outputs.published) }}
     runs-on: ubuntu-latest
+    permissions:
+      issues: write # to post issue comments
     steps:
       - name: Prepare comment
         id: prepare_comment
