@@ -55,3 +55,18 @@ jobs:
       - name: Build sandboxes storybooks
         run: |
           yarn build:sandboxes
+
+  ci-ok:
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      FAILURE: ${{ contains(join(needs.*.result, ','), 'failure') }}
+    steps:
+      - name: Check for failure
+        run: |
+          echo $FAILURE
+          if [ "$FAILURE" = "false" ]; then
+            exit 0
+          else
+            exit 1
+          fi
