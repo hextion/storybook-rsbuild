@@ -28,6 +28,15 @@
       ],
       "outputs": ["{projectRoot}/dist"],
       "cache": true
+    },
+    "check": {
+      "dependsOn": [
+        {
+          "target": "prep",
+          "params": "forward",
+          "dependencies": true
+        }
+      ]
     }
   },
   "defaultBase": "storybook-v7",
