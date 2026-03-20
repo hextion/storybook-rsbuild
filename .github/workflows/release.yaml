@@ -17,22 +17,26 @@ concurrency:
 jobs:
   release:
     name: Release
-    if: ${{ github.event_name == 'push' && github.repository == 'hextion/storybook-rsbuild' }}
+    if: ${{ github.event_name == 'push' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    permissions:
-      contents: write # to create release (changesets/action)
-      issues: write # to post issue comments (changesets/action)
-      pull-requests: write # to create pull request (changesets/action)
-      id-token: write # to use OpenID Connect token for trusted publishing (changesets/action)
     steps:
+      - name: generate app token
+        id: generate-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          owner: hextion
+          repositories: storybook-rsbuild
+
       - name: Checkout
         uses: actions/checkout@v6
 
       - name: Setup CI
         uses: ./.github/actions/ci-setup
         with:
-          node-version-file: '${{ github.workspace }}/.nvmrc'
+          node-version-file: '.nvmrc'
 
       - name: Create Release Pull Request or Publish to npm
         # https://github.com/changesets/action
@@ -43,8 +47,7 @@ jobs:
           version: 'yarn version-packages'
           commit: 'chore: version-packages'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
 
   snapshot_release:
     name: Snapshot release
