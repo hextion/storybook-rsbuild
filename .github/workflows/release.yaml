@@ -20,14 +20,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - name: generate app token
+      - name: Generate app token
         id: generate-token
-        uses: actions/create-github-app-token@v2
+        uses: actions/create-github-app-token@v3
         with:
-          app-id: ${{ vars.APP_ID }}
+          client-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
-          owner: hextion
-          repositories: storybook-rsbuild
 
       - name: Checkout
         uses: actions/checkout@v6
@@ -51,12 +49,17 @@ jobs:
   snapshot-release:
     if: ${{ github.event_name == 'workflow_dispatch' && github.repository == 'hextion/storybook-rsbuild' }}
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
     outputs:
       published: ${{ steps.snapshot-release.outputs.published }}
       published-packages: ${{ steps.snapshot-release.outputs.published-packages }}
     steps:
+      - name: Generate app token
+        id: generate-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - name: Get pull request data
         id: data
         uses: actions/github-script@v8
@@ -89,19 +92,23 @@ jobs:
           version: 'yarn version-packages:snapshot'
           publish: 'yarn release:snapshot'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
 
   comment:
     name: Comment
     needs: snapshot-release
     if: ${{ fromJson(needs.snapshot-release.outputs.published) }}
     runs-on: ubuntu-latest
-    permissions:
-      issues: write
-      pull-requests: write
     steps:
+      - name: Generate app token
+        id: generate-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - name: Prepare comment
-        id: prepare_comment
+        id: prepare-comment
         uses: actions/github-script@v8
         env:
           PUBLISHED_PACKAGES: ${{ needs.snapshot-release.outputs.published-packages }}
@@ -115,12 +122,11 @@ jobs:
       - name: Create comment
         uses: peter-evans/create-or-update-comment@v5
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ steps.generate-token.outputs.token }}
           issue-number: ${{ inputs.pull-request }}
           body: |
             ## Snapshot release
 
             Successfully released the following packages:
 
-            ${{ steps.prepare_comment.outputs.result }}
-          reactions: rocket
+            ${{ steps.prepare-comment.outputs.result }}
