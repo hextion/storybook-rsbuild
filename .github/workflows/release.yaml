@@ -17,6 +17,11 @@ concurrency:
 jobs:
   release:
     if: ${{ github.event_name == 'push' && github.repository == 'hextion/storybook-rsbuild' }}
+    permissions:
+      contents: write
+      id-token: write
+      issues: write
+      pull-requests: write
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -44,31 +49,17 @@ jobs:
           version: 'yarn version-packages'
           commit: 'chore: version-packages'
         env:
-          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   snapshot-release:
     if: ${{ github.event_name == 'workflow_dispatch' && github.repository == 'hextion/storybook-rsbuild' }}
+    permissions:
+      id-token: write
     runs-on: ubuntu-latest
     outputs:
       published: ${{ steps.snapshot-release.outputs.published }}
       published-packages: ${{ steps.snapshot-release.outputs.published-packages }}
     steps:
-      - name: Generate app token
-        id: app-token
-        uses: actions/create-github-app-token@v3
-        with:
-          client-id: ${{ vars.APP_ID }}
-          private-key: ${{ secrets.APP_PRIVATE_KEY }}
-
-      - name: Get ID token
-        id: id-token
-        uses: actions/github-script@v8
-        with:
-          github-token: ${{ steps.app-token.outputs.token }}
-          result-encoding: string
-          script: |
-            return await core.getIDToken()
-
       - name: Get pull request data
         id: data
         uses: actions/github-script@v8
@@ -101,20 +92,15 @@ jobs:
           version: 'yarn version-packages:snapshot'
           publish: 'yarn release:snapshot'
         env:
-          GITHUB_TOKEN: ${{ steps.id-token.outputs.result }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   comment:
     needs: snapshot-release
     if: ${{ fromJson(needs.snapshot-release.outputs.published) }}
+    permissions:
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
-      - name: Generate app token
-        id: generate-token
-        uses: actions/create-github-app-token@v3
-        with:
-          client-id: ${{ vars.APP_ID }}
-          private-key: ${{ secrets.APP_PRIVATE_KEY }}
-
       - name: Prepare comment
         id: prepare-comment
         uses: actions/github-script@v8
@@ -130,7 +116,7 @@ jobs:
       - name: Create comment
         uses: peter-evans/create-or-update-comment@v5
         with:
-          token: ${{ steps.generate-token.outputs.token }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           issue-number: ${{ inputs.pull-request }}
           body: |
             ## Snapshot release
