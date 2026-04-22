@@ -95,7 +95,6 @@ jobs:
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
 
   comment:
-    name: Comment
     needs: snapshot-release
     if: ${{ fromJson(needs.snapshot-release.outputs.published) }}
     runs-on: ubuntu-latest
