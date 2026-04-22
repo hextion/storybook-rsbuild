@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   release:
-    if: ${{ github.event_name == 'push' }}
+    if: ${{ github.event_name == 'push' && github.repository == 'hextion/storybook-rsbuild' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -54,11 +54,20 @@ jobs:
       published-packages: ${{ steps.snapshot-release.outputs.published-packages }}
     steps:
       - name: Generate app token
-        id: generate-token
+        id: app-token
         uses: actions/create-github-app-token@v3
         with:
           client-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - name: Get ID token
+        id: id-token
+        uses: actions/github-script@v8
+        with:
+          github-token: ${{ steps.app-token.outputs.token }}
+          result-encoding: string
+          script: |
+            return await core.getIDToken()
 
       - name: Get pull request data
         id: data
@@ -92,7 +101,7 @@ jobs:
           version: 'yarn version-packages:snapshot'
           publish: 'yarn release:snapshot'
         env:
-          GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+          GITHUB_TOKEN: ${{ steps.id-token.outputs.result }}
 
   comment:
     needs: snapshot-release
