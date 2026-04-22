@@ -51,6 +51,8 @@ jobs:
   snapshot-release:
     if: ${{ github.event_name == 'workflow_dispatch' && github.repository == 'hextion/storybook-rsbuild' }}
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     outputs:
       published: ${{ steps.snapshot-release.outputs.published }}
       published-packages: ${{ steps.snapshot-release.outputs.published-packages }}
